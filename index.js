@@ -18,7 +18,7 @@ function makeid(length) {
 
 app.get("/", () => {
   res.send("Hello! /dl/:title")
-}
+})
 
 app.get("/dl/:id", async function(req, res) {
   const response = {
