@@ -66,5 +66,5 @@ app.get("/dl/:id", async function(req, res) {
 })
 
 app.listen(3000, () => {
-  console.log("Complete.")
+  console.log("Done.")
 });
