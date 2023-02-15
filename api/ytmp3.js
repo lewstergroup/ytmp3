@@ -39,7 +39,7 @@ router.get("/:id", async function(req, res) {
       response.link = `mp3/${response.title}.mp3`
       response.status = "ok"
     } catch (err) {
-      response.err = err
+      console.log(err)
       response.status = "fail"
     }
   }
