@@ -16,9 +16,7 @@ router.get("/:id", async function(req, res) {
     err: ""
   }
 
-  const random = makeid(9);
   const id = req.params.id;
-
   const videos = await yts(id);
   const video = videos.videos[0];
 
