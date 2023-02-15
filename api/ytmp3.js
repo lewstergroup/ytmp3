@@ -24,7 +24,8 @@ router.get("/:id", async function(req, res) {
     link: "",
     thumbnail: "",
     duration: "",
-    status: ""
+    status: "",
+    err: ""
   }
 
   const random = makeid(9);
@@ -53,7 +54,7 @@ router.get("/:id", async function(req, res) {
       response.link = `mp3/${random}/${response.title}.mp3`
       response.status = "ok"
     } catch (err) {
-      console.log(err)
+      response.err = err
       response.status = "fail"
     }
   }
