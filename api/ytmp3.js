@@ -4,18 +4,6 @@ const express = require("express");
 const yts = require("yt-search");
 const router = express.Router();
 
-function makeid(length) {
-  let result = '';
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  const charactersLength = characters.length;
-  let counter = 0;
-  while (counter < length) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    counter += 1;
-  }
-  return result;
-}
-
 router.get("/:id", async function(req, res) {
   const response = {
     title: "",
@@ -49,9 +37,8 @@ router.get("/:id", async function(req, res) {
         format: "mp3",
         filter: "audioonly"
       })
-      fs.mkdirSync(`mp3/${random}`);
-      stream.pipe(fs.createWriteStream(`mp3/${random}/${response.title}.mp3`))
-      response.link = `mp3/${random}/${response.title}.mp3`
+      stream.pipe(fs.createWriteStream(`mp3/${response.title}.mp3`))
+      response.link = `mp3/${response.title}.mp3`
       response.status = "ok"
     } catch (err) {
       response.err = err
