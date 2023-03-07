@@ -37,8 +37,6 @@ app.get("/:id", async function(req, res) {
   if (!video) {
     response.status = "fail";
   } else if (video) {
-    const t = video.title.replace(/([^\w]+|\s+)/g, "_");
-    const title = t.replace(/ /g, "_");
     response.title = video.title
     response.id = video.videoId
     response.url = video.url
@@ -53,13 +51,9 @@ app.get("/:id", async function(req, res) {
       })
 
       fs.mkdirSync(`./mp3/${random}`)
-      stream.pipe(fs.createWriteStream(`./mp3/${random}/${random}.mp3`))
+      stream.pipe(fs.createWriteStream(`./mp3/${random}/${response.title}.mp3`))
 
-      app.get(`/dl/${random}`, function() {
-        res.sendFile(`./mp3/${random}/${random}.mp3`)
-      })
-
-      response.link = `/dl/${random}`
+      response.link = `/mp3/${random}/${response.title}`
       response.status = "ok"
     } catch (err) {
       console.log(err)
