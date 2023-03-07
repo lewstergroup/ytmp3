@@ -1,9 +1,75 @@
+const ytdl = require("ytdl-core");
+const fs = require("fs");
 const express = require("express");
+const yts = require("yt-search");
 const app = express();
-const ytmp3 = require("./api/ytmp3");
 
-app.use(express.json({ extended: false }));
+function makeid(length) {
+  let result = '';
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const charactersLength = characters.length;
+  let counter = 0;
+  while (counter < length) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    counter += 1;
+  }
+  return result;
+}
 
-app.use("/api/ytmp3", ytmp3);
+app.get("/:id", async function(req, res) {
+  if(!req.params.id) res.send("Enter id video")
+  const response = {
+    title: "",
+    id: "",
+    url: "",
+    link: "",
+    thumbnail: "",
+    duration: "",
+    status: ""
+  }
 
-app.listen(8000, () => console.log("Done."))
+  const random = makeid(9);
+  const id = req.params.id;
+
+  const videos = await yts(id);
+  const video = videos.videos[0];
+
+  if (!video) {
+    response.status = "fail";
+  } else if (video) {
+    const t = video.title.replace(/([^\w]+|\s+)/g, "_");
+    const title = t.replace(/ /g, "_");
+    response.title = video.title
+    response.id = video.videoId
+    response.url = video.url
+    response.thumbnail = video.thumbnail
+    response.duration = video.timestamp
+
+    try {
+      const stream = ytdl(response.url, {
+        quality: "highestaudio",
+        format: "mp3",
+        filter: "audioonly"
+      })
+
+      fs.mkdirSync(`./mp3/${random}`)
+      stream.pipe(fs.createWriteStream(`./mp3/${random}/${random}.mp3`))
+
+      app.get(`/dl/${random}`, function() {
+        res.sendFile(`./mp3/${random}/${random}.mp3`)
+      })
+
+      response.link = `/dl/${random}`
+      response.status = "ok"
+    } catch (err) {
+      console.log(err)
+      response.status = "fail"
+    }
+  }
+
+  res.json(response);
+})
+
+app.listen(3000, () => {
+  console.log("Complete.")
+});
