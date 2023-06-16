@@ -51,9 +51,9 @@ app.get("/:id", async function(req, res) {
       })
 
       fs.mkdirSync(`./mp3/${random}`)
-      stream.pipe(fs.createWriteStream(`./mp3/${random}/${response.title}.mp3`))
+      stream.pipe(fs.createWriteStream(`./mp3/${random}.mp3`))
 
-      response.link = `/mp3/${random}/${response.title}`
+      response.link = `/mp3/${random}.mp3`
       response.status = "ok"
     } catch (err) {
       console.log(err)
