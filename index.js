@@ -28,7 +28,7 @@ app.get("/:id", async function(req, res) {
     status: ""
   }
 
-  const random = makeid(9);
+  const random = makeid(12);
   const id = req.params.id;
 
   const videos = await yts(id);
@@ -51,9 +51,9 @@ app.get("/:id", async function(req, res) {
       })
 
       fs.mkdirSync(`./mp3/${random}`)
-      stream.pipe(fs.createWriteStream(`./mp3/${random}/${response.title}.mp3`))
+      stream.pipe(fs.createWriteStream(`./mp3/${random}.mp3`))
 
-      response.link = `/mp3/${random}/${response.title}`
+      response.link = `/mp3/${random}.mp3`
       response.status = "ok"
     } catch (err) {
       console.log(err)
